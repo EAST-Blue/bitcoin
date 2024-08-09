@@ -645,12 +645,12 @@ public:
     }
 };
 
-class CEastNetParams : public CChainParams
+class CEastTestnetParams : public CChainParams
 {
 public:
-    explicit CEastNetParams() 
+    explicit CEastTestnetParams() 
     {
-        m_chain_type = ChainType::EASTNET;
+        m_chain_type = ChainType::EASTTESTNET;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.nSubsidyHalvingInterval = 210000;
@@ -719,13 +719,13 @@ public:
             0
         };
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,0);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
-        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
-        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
+        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
+        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
-        bech32_hrp = "bc";
+        bech32_hrp = "tb";
     }
 };
 
@@ -754,9 +754,9 @@ std::unique_ptr<const CChainParams> CChainParams::TestNet4()
     return std::make_unique<const CTestNet4Params>();
 }
 
-std::unique_ptr<const CChainParams> CChainParams::EastNet()
+std::unique_ptr<const CChainParams> CChainParams::EastTestnet()
 {
-    return std::make_unique<const CEastNetParams>();
+    return std::make_unique<const CEastTestnetParams>();
 }
 
 std::vector<int> CChainParams::GetAvailableSnapshotHeights() const
@@ -776,7 +776,7 @@ std::optional<ChainType> GetNetworkForMagic(const MessageStartChars& message)
     const auto testnet_msg = CChainParams::TestNet()->MessageStart();
     const auto regtest_msg = CChainParams::RegTest({})->MessageStart();
     const auto signet_msg = CChainParams::SigNet({})->MessageStart();
-    const auto eastnet_msg = CChainParams::EastNet()->MessageStart();
+    const auto easttestnet_msg = CChainParams::EastTestnet()->MessageStart();
 
     if (std::equal(message.begin(), message.end(), mainnet_msg.data())) {
         return ChainType::MAIN;
@@ -786,8 +786,8 @@ std::optional<ChainType> GetNetworkForMagic(const MessageStartChars& message)
         return ChainType::REGTEST;
     } else if (std::equal(message.begin(), message.end(), signet_msg.data())) {
         return ChainType::SIGNET;
-    } else if (std::equal(message.begin(), message.end(), eastnet_msg.data())) {
-        return ChainType::EASTNET;
+    } else if (std::equal(message.begin(), message.end(), easttestnet_msg.data())) {
+        return ChainType::EASTTESTNET;
     }
     return std::nullopt;
 }
