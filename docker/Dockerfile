@@ -1,7 +1,10 @@
-FROM debian:bullseye-slim
+FROM ubuntu:22.04
 
 ARG UID=101
 ARG GID=101
+
+RUN apt update -y && apt install -y libevent-pthreads-2.1-7 libevent-2.1-7 libminiupnpc-dev libnatpmp-dev
+RUN apt install -y libzmq3-dev libsqlite3-dev
 
 RUN groupadd --gid ${GID} bitcoin \
   && useradd --create-home --no-log-init -u ${UID} -g ${GID} bitcoin \
@@ -15,6 +18,8 @@ ENV BITCOIN_DATA=/home/bitcoin/.bitcoin
 ENV PATH=/opt/bitcoin/bin:$PATH
 
 COPY bitcoind /opt/bitcoin/bin/
+COPY bitcoin-cli /opt/bitcoin/bin/
+COPY bitcoin-tx /opt/bitcoin/bin/
 
 COPY docker-entrypoint.sh /entrypoint.sh
 
